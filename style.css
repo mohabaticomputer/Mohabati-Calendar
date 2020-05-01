@@ -1,0 +1,217 @@
+.calendar-container {
+  direction: rtl;
+  text-align: center;
+  /* width: 260px;
+  height: 280px; */
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+
+#calendar {
+  font-family: "B titr";
+  font-size: 12px;
+  box-sizing: border-box;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+}
+
+table {
+  border-spacing: 0;
+  border-collapse: collapse;
+  
+}
+
+tr,th,td {
+  padding: 0;
+  margin: 0;
+}
+
+td,
+th {
+  border: solid rgba(155, 154, 154, 0.575) 0.02px;
+  height: 30px;
+  width: 37px;
+  margin: 0;
+}
+
+.cellDays {
+  background-color: white;
+  color: black;
+}
+
+.cellDays:hover {
+  background-color: rgba(180, 177, 177, 0.452);
+  color: black;
+  cursor: pointer;
+}
+
+.cellselected {
+  background-color: rgb(13, 110, 221);
+  color: white;
+  cursor: pointer;
+}
+
+
+.topheader-center {
+  border-left: 0px;
+  border-right: 0px;
+}
+
+.topheader-left {
+  border-left: 0px;
+  font-size: 20px; 
+  line-height: 12px;
+}
+
+.topheader-right {
+  border-right: 0px;
+  font-size: 20px; 
+  line-height: 12px;
+}
+
+tr.weekdayheader > th {
+  color: white;
+  font-size: 15px;
+}
+
+.today {
+  color: white;
+  background-color: rgb(0, 102, 255);
+  font-size: 15px;
+  font-family: "b titr";
+  font-weight: bold;
+}
+
+.success-alert {
+  background: linear-gradient(180deg, #00ff22, rgb(250, 253, 252));
+  background-size: 800% 800%;
+  animation: fademe 5s ease infinite;
+}
+.warning-alert {
+  background: linear-gradient(180deg, #fcb900, #ffffff);
+  background-size: 800% 800%;
+  animation: fademe 3s ease infinite;
+}
+.danger-alert {
+  background: linear-gradient(180deg, #f50a45, #fcfcfc);
+  background-size: 800% 800%;
+  animation: fademe 2s ease infinite;
+}
+
+.holiday-celebration {
+  color: rgb(2, 116, 26);
+}
+
+.holiday-aza {
+  color: rgb(0, 0, 0);
+}
+
+.holiday-tatilat {
+  color: red;
+}
+
+.prevMonth {
+  color: rgb(201, 202, 204);
+  font-size: 10px;
+}
+
+.nextMonth {
+  color: rgb(201, 202, 204);
+  font-size: 10px;
+}
+
+
+/* --------------------------------- */
+@keyframes fadeIt {
+  0% {
+    background-color: #fff9f3;
+    color: black;
+  }
+  33% {
+    background-color: #ffcf9a;
+    color: black;
+  }
+  66% {
+    background-color: #ff9219;
+  }
+  100% {
+    background-color: #ff8700;
+  }
+}
+
+@keyframes fademe {
+  0% {
+    background-position: 22% 0%;
+  }
+  50% {
+    background-position: 79% 100%;
+  }
+  100% {
+    background-position: 22% 0%;
+  }
+}
+
+
+.BUTTON_BHS {
+  background: #7c7c7c;
+  background-image: linear-gradient(to bottom, #7c7c7c, #1b1b1b);
+  color: #ffffff;
+  
+  border: solid #1b1b1b 1px;
+  text-decoration: none;
+  cursor: pointer;
+  text-align: center;
+}
+
+.BUTTON_BHS:hover {
+  border: solid #1b1b1b 1px;
+  background: #7c7c7c;
+  background-image: linear-gradient(to bottom, #1b1b1b, #7c7c7c);
+  text-decoration: none;
+}
+
+.BUTTON_BHS2 {
+    background: #a8a8a8;
+    background-image: linear-gradient(to bottom, #a8a8a8, #6b6b6b);
+    color: #ffffff;
+    
+    border: solid #6b6b6b 1px;
+    text-decoration: none;
+    text-align: center;
+  }
+
+/* ------------------------------------- */
+.month-header-Selected {
+  background: #f58682;
+  background-image: linear-gradient(to bottom, #f58682, #ed3333);
+  color: #ffffff;
+  
+  border: solid #f19999 1px;
+  text-decoration: none;
+  text-align: center;
+}
+
+input.day-select {
+  width: 30%;
+  text-align: center;
+  font-family: 'b koodak';
+  padding: 0px;
+  margin: 0px;
+  font-size: 11px;
+  display: inline-block;
+}
+
+input[type='button'] {
+  background-color: lightcoral;
+  color: black;
+  font-family: 'b titr';
+  font-size: 9px;
+  border-radius: 3px;
+}
+
+
+
+  
