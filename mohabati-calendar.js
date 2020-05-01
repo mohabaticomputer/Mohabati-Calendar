@@ -2,30 +2,43 @@
 persianDate.toLocale("fa");
 const holidays = { celebration: [5, 23], aza: [9], tatilat: [19] };
 const alerts = { success: [5, 23], warning: [9], danger: [18] };
-var elementId = "";
 
-window.onload = InitialRun('calendar-container');
+//window.onload = InitialRun('calendar-container');
 
-function InitialRun(tmpElementId) {
-  elementId = tmpElementId;
-  makeCalendar(new persianDate(), holidays, new persianDate(), elementId);
+function InitialRun(tmpElementId, baseDate="") {
+  let elementId = tmpElementId;
+  
+  if(baseDate==="") {
+    baseDate = new persianDate()
+  } else {
+    let date = baseDate.split('/');
+    date[0] = parseInt(date[0]);
+    date[1] = parseInt(date[1]);
+    date[2] = parseInt(date[2]);
+    baseDate = new persianDate();
+    baseDate.date(date[2]);
+    baseDate.month(date[1]);
+    baseDate.year(date[0]);
+  }
+  makeCalendar(baseDate, holidays, new persianDate(), elementId);
 };
 
 function makeCalendar(baseDate, holidays, today, elementId) {
   let calendar = document.getElementById(elementId);
   calendar.innerHTML = "";
   let table = document.createElement("table");
-  table.setAttribute("id", "calendar");
+  table.setAttribute("id", elementId+"-calendar");
+  table.classList.add('claendar-table');
   calendar.appendChild(table);
 
-  let Rows = makeRow(baseDate, holidays, today);
+  let Rows = makeRow(baseDate, holidays, today, elementId);
   Rows.forEach((row) => {
     table.appendChild(row);
   });
-  table.appendChild(makeFooter(baseDate));
+  table.appendChild(makeFooter(baseDate, elementId));
 }
 
-function makeTopHeader(baseDate) {
+function makeTopHeader(baseDate, elementId) {
   let row = document.createElement("tr");
   row.classList.add("header");
   row.classList.add("BUTTON_BHS");
@@ -34,6 +47,10 @@ function makeTopHeader(baseDate) {
   td.setAttribute(
     "data-date",
     baseDate.date(1).subtract("M", 1).toLocale("en").format("YYYY/MM/DD")
+  );
+  td.setAttribute(
+    "data-calendarid",
+    elementId
   );
   td.setAttribute("colspan", "1");
   td.classList.add("topheader-left");
@@ -49,6 +66,10 @@ function makeTopHeader(baseDate) {
     document.createTextNode(baseDate.format("MMMM YYYY"))
   );
   topheaderCenter.setAttribute("data-date", baseDate.toLocale("en").format("YYYY"));
+  topheaderCenter.setAttribute(
+    "data-calendarid",
+    elementId
+  );
   topheaderCenter.onclick = goToYear;
   row.appendChild(topheaderCenter);
 
@@ -56,6 +77,10 @@ function makeTopHeader(baseDate) {
   td3.setAttribute(
     "data-date",
     baseDate.date(1).add("M", 1).toLocale("en").format("YYYY/MM/DD")
+  );
+  td3.setAttribute(
+    "data-calendarid",
+    elementId
   );
   td3.setAttribute("colspan", "1");
   td3.classList.add("topheader-right");
@@ -82,13 +107,17 @@ function makeHeader(className) {
   return row;
 }
 
-function makeFooter(baseDate) {
+function makeFooter(baseDate, elementId) {
   let row = document.createElement("tr");
   let td = document.createElement("td");
   td.setAttribute("colspan", "7");
   td.setAttribute(
     "data-date",
     baseDate.date(1).toLocale("en").format("YYYY/MM/DD")
+  );
+  td.setAttribute(
+    "data-calendarid",
+    elementId
   );
 
   td.appendChild(
@@ -105,11 +134,11 @@ function makeFooter(baseDate) {
   return row;
 }
 
-function makeRow(baseDate, holidays, today) {
+function makeRow(baseDate, holidays, today, elementId) {
   let startOfCalendarTable = getStartOfCalendarTable(baseDate);
 
   let Rows = [];
-  Rows.push(makeTopHeader(baseDate));
+  Rows.push(makeTopHeader(baseDate, elementId));
   Rows.push(makeHeader("weekdayheader BUTTON_BHS2"));
 
   let goThroughDays = startOfCalendarTable;
@@ -207,7 +236,7 @@ function prevMonth(e) {
   datee.year(parseInt(date[0]));
   datee.month(parseInt(date[1]));
   datee.date(parseInt(date[2]));
-  makeCalendar(datee, holidays, new persianDate(new Date()), elementId);
+  makeCalendar(datee, holidays, new persianDate(new Date()), e.target.dataset.calendarid);
 }
 
 function nextMonth(e) {
@@ -216,11 +245,11 @@ function nextMonth(e) {
   datee.year(parseInt(date[0]));
   datee.month(parseInt(date[1]));
   datee.date(parseInt(date[2]));
-  makeCalendar(datee, holidays, new persianDate(), elementId);
+  makeCalendar(datee, holidays, new persianDate(), e.target.dataset.calendarid);
 }
 
 function currentMonth(e) {
-  makeCalendar(new persianDate(), holidays, new persianDate(), elementId);
+  makeCalendar(new persianDate(), holidays, new persianDate(), e.target.dataset.calendarid);
 }
 
 function cellSelect(e) {
@@ -260,23 +289,24 @@ function makeMonthView(baseDate, elementId) {
   let calendar = document.getElementById(elementId);
   calendar.innerHTML = "";
   let table = document.createElement("table");
-  table.setAttribute("id", "calendar");
+  table.setAttribute("id", elementId+"-calendar");
+  table.classList.add('claendar-table');
   calendar.appendChild(table);
 
-  let Rows = makeMonthViewRow(baseDate);
+  let Rows = makeMonthViewRow(baseDate, elementId);
   Rows.forEach((row) => {
     table.appendChild(row);
   });
   table.appendChild(makeFooter(baseDate));
 }
 
-function makeMonthViewRow(baseDate) {
+function makeMonthViewRow(baseDate, elementId) {
   let startYear = baseDate.date(1).subtract("y", ((baseDate.year() % 10) + 1));
 
   let Rows = [];
   Rows.push(makeTopHeaderMonthView(baseDate, startYear));
-  Rows.push(makeExtendedYears(startYear, baseDate));
-  Rows.push(makeExtendedYears(startYear.add("y", 6), baseDate));
+  Rows.push(makeExtendedYears(startYear, baseDate, elementId));
+  Rows.push(makeExtendedYears(startYear.add("y", 6), baseDate, elementId));
   let month =1;
   for(let i=1; i<=4; i++) {
     let tr = document.createElement('tr');
@@ -284,6 +314,7 @@ function makeMonthViewRow(baseDate) {
       let td = document.createElement('td');
       td.appendChild(document.createTextNode(getPersianMonthName(month)));
       td.setAttribute('data-date',baseDate.month(month).toLocale("en").format('YYYY/MM'));
+      td.setAttribute('data-calendarid',elementId);
       td.setAttribute('colspan',2);
       td.classList.add('cellDays');
 
@@ -293,7 +324,7 @@ function makeMonthViewRow(baseDate) {
     }
     Rows.push(tr);
   }
-  Rows.push(makeInputDate());
+  Rows.push(makeInputDate(elementId));
   return Rows;
 }
 
@@ -344,13 +375,14 @@ function makeTopHeaderMonthView(baseDate, startYear) {
   return row;
 }
 
-function makeExtendedYears(baseDate, currentYear) {
+function makeExtendedYears(baseDate, currentYear, elementId) {
   let tr = document.createElement("tr");
   tr.classList.add("BUTTON_BHS2");
 
   for (let i = 1; i <= 6; i++) {
     let td = document.createElement("td");
     td.setAttribute("data-date", baseDate.toLocale('en').format("YYYY"));
+    td.setAttribute("data-calendarid", elementId);
     td.onclick = goToYear;
     td.appendChild(document.createTextNode(baseDate.format("YYYY")));
     if (baseDate.year() === currentYear.year()) {
@@ -364,7 +396,7 @@ function makeExtendedYears(baseDate, currentYear) {
   return tr;
 }
 
-function makeInputDate() {
+function makeInputDate(elementId) {
   let tr = document.createElement('tr');
   tr.classList.add('BUTTON_BHS2');
   
@@ -405,6 +437,7 @@ function makeInputDate() {
   let inputButton = document.createElement('input');
   inputButton.setAttribute('type', 'button');
   inputButton.setAttribute('value', 'برو');
+  inputButton.setAttribute('data-calendarid', elementId);
   inputButton.onclick = goToDate;
   // inputDay.classList.add('day-select');
   td3.appendChild(inputButton);
@@ -452,7 +485,7 @@ function goToMonth(e) {
   baseDate = baseDate.month(clickedMonth[1]);
   baseDate = baseDate.years(clickedMonth[0]);
 
-  makeCalendar(baseDate, holidays, new persianDate(new Date()), elementId);
+  makeCalendar(baseDate, holidays, new persianDate(new Date()), e.target.dataset.calendarid);
 }
 
 function goToYear(e) {
@@ -462,7 +495,7 @@ function goToYear(e) {
   baseDate = baseDate.month(1);
   baseDate = baseDate.years(clickedYear);
 
-  makeMonthView(baseDate, elementId);
+  makeMonthView(baseDate, e.target.dataset.calendarid);
 }
 
 function goToDate(e) {
@@ -480,5 +513,5 @@ function goToDate(e) {
   baseDate = baseDate.date(day);
   baseDate = baseDate.month(month);
   baseDate = baseDate.year(year);
-  makeCalendar(baseDate, holidays, new persianDate(new Date()), elementId);
+  makeCalendar(baseDate, holidays, new persianDate(new Date()), e.target.dataset.calendarid);
 }
